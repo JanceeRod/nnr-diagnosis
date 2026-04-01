@@ -52,7 +52,7 @@ language_dir=$(get_language_dir "$base_dir" "$language")
 model_flags=($( \
   python recognizers/neural_networks/get_architecture_args.py \
     --architecture "$architecture" \
-    --parameter-budget 64000 \
+    --parameter-budget 256000 \
     --training-data "$language_dir" \
 ))
 
