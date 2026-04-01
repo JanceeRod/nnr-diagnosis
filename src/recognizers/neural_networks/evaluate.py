@@ -61,6 +61,10 @@ def split_score_dict(batch, batch_score_dict):
         label = example[1][0]
         example_score_dict = {}
         for key, (numerator, denominator) in batch_score_dict.items():
+            if not isinstance(numerator, list):
+                # batch-level scalar metric like binary_reg has no
+                # per-example breakdown skip it in per-example output.
+                continue
             if len(numerator) < len(batch):
                 if label:
                     example_score_dict[key] = (
