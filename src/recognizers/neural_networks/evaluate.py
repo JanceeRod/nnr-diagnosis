@@ -17,6 +17,7 @@ from recognizers.neural_networks.training_loop import generate_batches, get_loss
 def evaluate(model, model_interface, batches, num_examples, eval_mode='soft'):
     device = model_interface.get_device(None)
     example_scores = [None] * num_examples
+    example_predictions = [None] * num_examples
     model.eval()
     if eval_mode == 'discrete':
         model.inner.set_mode('eval_col_all')
@@ -33,10 +34,13 @@ def evaluate(model, model_interface, batches, num_examples, eval_mode='soft'):
                 label_smoothing_factor=0.0,
                 include_accuracy=True
             )
+            # Extract per-example predictions before passing to split_score_dict.
+            batch_predictions = batch_score_dict.pop('recognition_prediction')[0].tolist()
             example_score_dicts = split_score_dict(batch, batch_score_dict)
-            for (x, (i, d)), example_score_dict in zip(indexed_batch, example_score_dicts):
+            for (x, (i, d)), example_score_dict, prediction in zip(indexed_batch, example_score_dicts, batch_predictions):
                 example_scores[i] = example_score_dict
-    return example_scores
+                example_predictions[i] = prediction
+    return example_scores, example_predictions
 
 class DictScoreAccumulator:
 
@@ -135,7 +139,7 @@ def main():
         )
         examples = [(x, (i, d)) for i, (x, d) in enumerate(examples)]
         batches = generate_batches(examples, args.batching_max_tokens)
-        scores = evaluate(saver.model, model_interface, batches, len(examples), eval_mode=args.eval_mode)
+        scores, predictions = evaluate(saver.model, model_interface, batches, len(examples), eval_mode=args.eval_mode)
         accumulator = DictScoreAccumulator()
         example_scores_path = args.output / f'{dataset}.jsonl'
         print(f'writing {example_scores_path}')
@@ -143,6 +147,11 @@ def main():
             for score_dict in scores:
                 write_json_line(score_dict, fout)
                 accumulator.update(score_dict)
+        predictions_path = args.output / f'{dataset}_predictions.jsonl'
+        print(f'writing {predictions_path}')
+        with predictions_path.open('w') as fout:
+            for prediction in predictions:
+                write_json_line({'prediction': prediction}, fout)
         total_scores = accumulator.get_value()
         total_scores_path = args.output / f'{dataset}.json'
         print(f'writing {total_scores_path}')

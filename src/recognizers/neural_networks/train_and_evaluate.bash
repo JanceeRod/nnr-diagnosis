@@ -96,6 +96,6 @@ python recognizers/neural_networks/train.py \
   --early-stopping-patience 10 \
   --learning-rate-patience 5 \
   --learning-rate-decay-factor 0.5 \
-  --examples-per-checkpoint 10000 \
+  --examples-per-checkpoint 1000 \
   "${progress_args[@]}"
 bash recognizers/neural_networks/evaluate.bash "$language_dir" "$model_dir"
