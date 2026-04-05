@@ -60,6 +60,26 @@ class RecognitionModelInterface(ModelInterface):
             help='(synced_difflogic) Number of neurons GroupSum aggregates per '
                  'output feature. Must be >= 1. Default 2 gives each feature a '
                  'meaningful 2-neuron majority vote; 1 makes GroupSum an identity.')
+        group.add_argument('--difflogic-init-type',
+            choices=['noisy_residual', 'residual', 'gaussian', 'custom_gaussian'],
+            default='noisy_residual',
+            help='(synced_difflogic) How to initialize LogicLayer weight tensors. '
+                 'noisy_residual (default): biases each neuron toward the FALSE '
+                 'function plus Gaussian noise, giving a near-identity start. '
+                 'residual: same but no noise. gaussian: pure Gaussian, no bias. '
+                 'custom_gaussian: Gaussian with special handling for K-layer weights.')
+        group.add_argument('--hidden-state-init-type',
+            choices=['zero', 'one', 'gaussian', 'uniform', 'learnable'],
+            default='zero',
+            help='(synced_difflogic) How to initialize the recurrent hidden state '
+                 'at the start of each sequence. zero (default): all zeros. '
+                 'learnable: trained as a parameter (consistent with rnn/lstm/gru).')
+        group.add_argument('--connections',
+            choices=['random', 'unique'],
+            default='random',
+            help='(synced_difflogic) How to wire input pairs inside each LogicLayer. '
+                 'random (default): pairs chosen uniformly at random. '
+                 'unique: pairs chosen to cover all combinations as evenly as possible.')
         group.add_argument('--use-language-modeling-head', action='store_true', default=False,
             help='Add a language modeling head to the model that will be used '
                  'to add a language modeling objective to the loss function.')
@@ -86,6 +106,9 @@ class RecognitionModelInterface(ModelInterface):
             hidden_units=args.hidden_units,
             embedding_dim=embedding_dim,
             group_factor=getattr(args, 'group_factor', 2),
+            difflogic_init_type=getattr(args, 'difflogic_init_type', 'noisy_residual'),
+            hidden_state_init_type=getattr(args, 'hidden_state_init_type', 'zero'),
+            connections=getattr(args, 'connections', 'random'),
             use_language_modeling_head=args.use_language_modeling_head,
             use_next_symbols_head=args.use_next_symbols_head,
             input_vocabulary_size=len(input_vocab),
@@ -104,6 +127,9 @@ class RecognitionModelInterface(ModelInterface):
         hidden_units,
         embedding_dim,
         group_factor,
+        difflogic_init_type,
+        hidden_state_init_type,
+        connections,
         use_language_modeling_head,
         use_next_symbols_head,
         input_vocabulary_size,
@@ -219,6 +245,9 @@ class RecognitionModelInterface(ModelInterface):
                 num_layers=num_layers,
                 dropout=dropout,
                 group_factor=group_factor,
+                difflogic_init_type=difflogic_init_type,
+                hidden_state_init_type=hidden_state_init_type,
+                connections=connections,
                 use_language_modeling_head=use_language_modeling_head,
                 use_next_symbols_head=use_next_symbols_head,
                 output_vocabulary_size=output_vocabulary_size,
