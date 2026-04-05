@@ -95,13 +95,13 @@ def main():
         #   hidden_units = round((budget - 1) / (vocab_size + 16 * (3 * num_layers + group_factor) + 1))
         group_factor = 2  # matches model_interface.py default
 
-        coeff = vocab_size + 16 * (3 * num_layers + group_factor) + 1
-        hidden_units = round((args.parameter_budget - 1) / coeff)
-        embedding_dim = hidden_units  # E = H satisfies the E <= 2*H constraint
+        # coeff = vocab_size + 16 * (3 * num_layers + group_factor) + 1
+        # hidden_units = round((args.parameter_budget - 1) / coeff)
+        # embedding_dim = hidden_units  # E = H satisfies the E <= 2*H constraint
 
-        # coeff = 16 * (3 * num_layers + group_factor) + 1
-        # hidden_units = round((args.parameter_budget - vocab_size * vocab_size - 1) / coeff)
-        # embedding_dim = vocab_size
+        coeff = 16 * (3 * num_layers + group_factor) + 1
+        hidden_units = round((args.parameter_budget - vocab_size * vocab_size - 1) / coeff)
+        embedding_dim = vocab_size
 
         outputs.extend([
             '--hidden-units', str(hidden_units),
