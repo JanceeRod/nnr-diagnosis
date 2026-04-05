@@ -15,6 +15,7 @@ from .batching import group_into_batches
 from .data import VocabularyContainer
 from .model_interface import ModelInput
 
+
 def add_training_loop_arguments(parser):
     group = common_add_training_loop_arguments(parser,
         max_tokens_per_batch_help=
