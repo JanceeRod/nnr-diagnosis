@@ -224,10 +224,11 @@ def get_loss_terms(
             recognition_accuracy,
             num_examples_denominator
         )
-        result['recognition_prediction'] = (
-            recognition_predictions.long(),
-            None
-        )
+        if numerator_reduction == 'none':
+            result['recognition_prediction'] = (
+                recognition_predictions.long(),
+                None
+            )
     if language_modeling_logits is not None:
         # Compute the language modeling loss using cross-entropy.
         pad_index = model_interface.output_padding_index
