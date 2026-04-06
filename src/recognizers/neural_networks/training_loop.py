@@ -209,7 +209,7 @@ def get_loss_terms(
     # _last_binary_reg_loss after each forward pass.  When the coefficient is 0
     # (the default) this term is present but will be multiplied out by get_loss().
     if hasattr(model, '_last_binary_reg_loss'):
-        result['binary_reg'] = (model._last_binary_reg_loss, num_examples_denominator)
+        result['binary_reg'] = (model._last_binary_reg_loss, 1)
     if include_accuracy:
         # The model accepts iff the logit is >= 0 (the probability is >= 0.5).
         recognition_predictions = recognition_logits >= 0.0
