@@ -26,7 +26,7 @@ def add_training_loop_arguments(parser):
     )
     group.add_argument('--language-modeling-loss-coefficient', type=float, default=1.0)
     group.add_argument('--next-symbols-loss-coefficient', type=float, default=1.0)
-    group.add_argument('--binary-reg-loss-coefficient', type=float, default=0.0,
+    group.add_argument('--binary-reg-loss-coefficient', type=float, default=0.5,
         help='(synced_difflogic) Weight for the binary-activation regularization '
              'loss mean(sigmoid(emb)*(1-sigmoid(emb))). Set >0 to encourage the '
              'embedding layer to produce near-binary activations.')
