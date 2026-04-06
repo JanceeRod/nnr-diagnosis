@@ -56,13 +56,13 @@ class RecognitionModelInterface(ModelInterface):
         group.add_argument('--init-scale', type=float,
             help='The scale used for the uniform distribution from which '
                  'certain parameters are initialized.')
-        group.add_argument('--group-factor', type=int, default=30,
+        group.add_argument('--group-factor', type=int, default=2,
             help='(synced_difflogic) Number of neurons GroupSum aggregates per '
                  'output feature. Must be >= 1. Default 2 gives each feature a '
                  'meaningful 2-neuron majority vote; 1 makes GroupSum an identity.')
         group.add_argument('--difflogic-init-type',
             choices=['noisy_residual', 'residual', 'gaussian', 'custom_gaussian'],
-            default='noisy_residual',
+            default='residual',
             help='(synced_difflogic) How to initialize LogicLayer weight tensors. '
                  'noisy_residual (default): biases each neuron toward the FALSE '
                  'function plus Gaussian noise, giving a near-identity start. '

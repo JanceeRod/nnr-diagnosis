@@ -93,7 +93,7 @@ def main():
         # Substituting gives a linear equation in hidden_units:
         #   num_params = hidden_units * (vocab_size + 16 * (3 * num_layers + group_factor) + 1) + 1
         #   hidden_units = round((budget - 1) / (vocab_size + 16 * (3 * num_layers + group_factor) + 1))
-        group_factor = 30  # matches model_interface.py default
+        group_factor = 2  # matches model_interface.py default
 
         coeff = vocab_size + 16 * (3 * num_layers + group_factor) + 1
         hidden_units = round((args.parameter_budget - 1) / coeff)
