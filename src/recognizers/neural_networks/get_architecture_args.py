@@ -109,7 +109,7 @@ def main():
         ])
     else:
         raise NotImplementedError
-    outputs.extend(['--dropout', '0.1'])
+    outputs.extend(['--dropout', '0.0'])
     print(' '.join(outputs))
 
 if __name__ == '__main__':
