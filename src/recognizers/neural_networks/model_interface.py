@@ -56,7 +56,7 @@ class RecognitionModelInterface(ModelInterface):
         group.add_argument('--init-scale', type=float,
             help='The scale used for the uniform distribution from which '
                  'certain parameters are initialized.')
-        group.add_argument('--group-factor', type=int, default=2,
+        group.add_argument('--group-factor', type=int, default=30,
             help='(synced_difflogic) Number of neurons GroupSum aggregates per '
                  'output feature. Must be >= 1. Default 2 gives each feature a '
                  'meaningful 2-neuron majority vote; 1 makes GroupSum an identity.')
