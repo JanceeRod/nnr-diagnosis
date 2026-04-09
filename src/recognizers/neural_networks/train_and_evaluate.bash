@@ -89,7 +89,7 @@ python recognizers/neural_networks/train.py \
   --init-scale 0.1 \
   "${loss_term_flags[@]}" \
   --max-epochs 200 \
-  --max-tokens-per-batch "$(random_sample --int 128 4096)" \
+  --max-tokens-per-batch "$(random_sample --int 2048 4096)" \
   --optimizer Adam \
   --initial-learning-rate "$(random_sample --log 0.0001 0.01)" \
   --gradient-clipping-threshold 5 \
