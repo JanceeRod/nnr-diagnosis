@@ -80,6 +80,14 @@ for loss_term in ${loss_terms//+/ }; do
 done
 
 model_dir=$(get_model_dir "$base_dir" "$language" "$architecture" "$loss_terms" "$validation_data" "$trial_no")
+datasets=(test training)
+for dataset in test-short-held-out test-edit-distance; do
+  if [[ -e $language_dir/datasets/$dataset ]]; then
+    datasets+=("$dataset")
+  fi
+done
+eval_dir=$model_dir/eval
+
 python recognizers/neural_networks/train.py \
   --output "$model_dir" \
   --training-data "$language_dir" \
@@ -88,7 +96,7 @@ python recognizers/neural_networks/train.py \
   "${model_flags[@]}" \
   --init-scale 0.1 \
   "${loss_term_flags[@]}" \
-  --max-epochs 200 \
+  --max-epochs 100 \
   --max-tokens-per-batch "$(random_sample --int 2048 4096)" \
   --optimizer Adam \
   --initial-learning-rate "$(random_sample --log 0.0001 0.01)" \
@@ -97,5 +105,8 @@ python recognizers/neural_networks/train.py \
   --learning-rate-patience 5 \
   --learning-rate-decay-factor 0.5 \
   --examples-per-checkpoint 10000 \
+  --batching-max-tokens 1024 \
+  --datasets "${datasets[@]}" \
+  --eoutput "$eval_dir" \
   "${progress_args[@]}"
-bash recognizers/neural_networks/evaluate.bash "$language_dir" "$model_dir"
+# bash recognizers/neural_networks/evaluate.bash "$language_dir" "$model_dir"
