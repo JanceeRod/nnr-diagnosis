@@ -241,5 +241,5 @@ def main():
         json.dump(total_scores, sys.stdout, indent=2)
         print()
 
-if _name_ == '_main_':
+if __name__ == '_main_':
     main()
