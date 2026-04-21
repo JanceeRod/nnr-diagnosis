@@ -72,7 +72,8 @@ class DictScoreAccumulator:
 
 def split_score_dict(batch, batch_score_dict):
     batch_score_dict = {
-        k : (n.tolist(), d.tolist() if d is not None else d)
+        k : (n.tolist() if isinstance(n, torch.Tensor) else n,
+             d.tolist() if isinstance(d, torch.Tensor) else d)
         for k, (n, d) in batch_score_dict.items()
     }
     positive_index = 0
