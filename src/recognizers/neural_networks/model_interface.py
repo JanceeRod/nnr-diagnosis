@@ -430,6 +430,7 @@ class RecognitionModelInterface(ModelInterface):
         d_model = saver.kwargs['d_model']
         for module in saver.model.modules():
             if isinstance(module, SinusoidalPositionalEncodingCacher):
+                module.set_allow_reallocation(True)
                 module.get_encodings(max_length, d_model)
                 module.set_allow_reallocation(False)
 
