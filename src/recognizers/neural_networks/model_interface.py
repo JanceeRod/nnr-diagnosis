@@ -430,9 +430,8 @@ class RecognitionModelInterface(ModelInterface):
         d_model = saver.kwargs['d_model']
         for module in saver.model.modules():
             if isinstance(module, SinusoidalPositionalEncodingCacher):
-                module.set_allow_reallocation(True)
                 module.get_encodings(max_length, d_model)
-                module.set_allow_reallocation(False)
+                module.set_allow_reallocation(True)
 
     def get_logits(self, model, model_input):
         # SyncedDiffLogicRecognizer is a plain nn.Module (not a Composed),
